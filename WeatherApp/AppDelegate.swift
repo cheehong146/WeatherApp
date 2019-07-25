@@ -19,8 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.makeKeyAndVisible()
-        window?.rootViewController = CityDetailVC(nibName: "CityDetailVC", bundle: nil)
-        
+        window?.rootViewController = UINavigationController(rootViewController: HomeVC(nibName: "HomeVC", bundle: nil))
         return true
     }
 

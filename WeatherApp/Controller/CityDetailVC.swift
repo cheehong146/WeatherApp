@@ -30,6 +30,7 @@ class CityDetailVC: UIViewController {
     //all label array
     var allLabel = [UILabel]()
     
+    var queryTxt: String?
     var city: City?
     
     override func viewDidLoad() {
@@ -42,10 +43,9 @@ class CityDetailVC: UIViewController {
             lblWindHeader, lblWindSpeed, lblWindDegree
         ]
         
-        let userSelectedCity = "Moscow"
+        self.title = queryTxt!
         
-        
-        fetchCityWeatherDetail(city: userSelectedCity)
+        fetchCityWeatherDetail(city: queryTxt!)
 //        setBlurLayer()
     }
     

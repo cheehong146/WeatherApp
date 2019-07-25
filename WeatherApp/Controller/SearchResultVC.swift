@@ -133,6 +133,18 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
             return 40
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        let selectedTxt = cell?.textLabel?.text
+        goToDetailWeatherVC(queryTxt: selectedTxt!)
+    }
+    
+    fileprivate func goToDetailWeatherVC(queryTxt: String){
+        let detailWeatherVC = CityDetailVC(nibName: "CityDetailVC", bundle: nil)
+        detailWeatherVC.queryTxt = queryTxt
+        self.navigationController?.pushViewController(detailWeatherVC, animated: true)
+    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return ResultType.count
