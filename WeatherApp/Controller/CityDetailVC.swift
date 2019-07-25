@@ -46,29 +46,18 @@ class CityDetailVC: UIViewController {
         
         
         fetchCityWeatherDetail(city: userSelectedCity)
-        setBlurLayer()
+//        setBlurLayer()
     }
     
     fileprivate func fetchCityWeatherDetail(city: String){
-        let param: Parameters = ["p": city, Constants.apiKeyParam: Constants.apiKey]
-        let request = Alamofire.request(Constants.cityWeatherApi, method: .get, parameters: param, encoding: URLEncoding.queryString, headers: nil)
-        request.responseJSON { (response) in
-            switch response.result{
-            case .success:
-                do{
-                    guard let json = response.data else {return}
-                    let decoder = JSONDecoder()
-                    self.city = try decoder.decode(City.self, from: json)
-                    if let request = response.request {
-                        print(request)
-                    }
-                    self.refershLayout()
-                }catch {
-                    print("Failed to decode json data \(error)")
-                }
-                break
-            case .failure:
-                break
+        NetworkingController.sharedInstance.getWeatherDetail(capitalCity: city) { (city, error) in
+            if let city = city {
+                self.city = city
+                self.refershLayout()
+            }
+            
+            if let error = error{
+                print(error)
             }
         }
     }
