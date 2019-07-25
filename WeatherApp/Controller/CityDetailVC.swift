@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import CoreImage
 
 class CityDetailVC: UIViewController {
     @IBOutlet weak var ivBackground: UIImageView!
@@ -31,6 +32,7 @@ class CityDetailVC: UIViewController {
     var allLabel = [UILabel]()
     
     var queryTxt: String?
+    var countryCode: String?
     var city: City?
     
     override func viewDidLoad() {
@@ -44,9 +46,10 @@ class CityDetailVC: UIViewController {
         ]
         
         self.title = queryTxt!
+        self.lblCountryCode.text = countryCode ?? "123"
         
         fetchCityWeatherDetail(city: queryTxt!)
-//        setBlurLayer()
+        blurEffect(imageView: ivBackground)
     }
     
     fileprivate func fetchCityWeatherDetail(city: String){
@@ -90,11 +93,22 @@ class CityDetailVC: UIViewController {
         lblWindDegreeVal.text = String(format: "%.2f", city.wind.deg)
     }
     
-    fileprivate func setBlurLayer(){
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
+    fileprivate func blurEffect(imageView: UIImageView) {
+        
+        let context = CIContext(options: nil)
+        
+        let currentFilter = CIFilter(name: "CIGaussianBlur")
+        let beginImage = CIImage(image: imageView.image!)
+        currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
+        currentFilter!.setValue(5, forKey: kCIInputRadiusKey)
+        
+        let cropFilter = CIFilter(name: "CICrop")
+        cropFilter!.setValue(currentFilter!.outputImage, forKey: kCIInputImageKey)
+        cropFilter!.setValue(CIVector(cgRect: beginImage!.extent), forKey: "inputRectangle")
+        
+        let output = cropFilter!.outputImage
+        let cgimg = context.createCGImage(output!, from: output!.extent)
+        let processedImage = UIImage(cgImage: cgimg!)
+        imageView.image = processedImage
     }
 }

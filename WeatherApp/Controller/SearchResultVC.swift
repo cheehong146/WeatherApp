@@ -137,12 +137,13 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         let selectedTxt = cell?.textLabel?.text
-        goToDetailWeatherVC(queryTxt: selectedTxt!)
+        goToDetailWeatherVC(queryTxt: selectedTxt!, countryCode: )
     }
     
-    fileprivate func goToDetailWeatherVC(queryTxt: String){
+    fileprivate func goToDetailWeatherVC(queryTxt: String, countryCode: String){
         let detailWeatherVC = CityDetailVC(nibName: "CityDetailVC", bundle: nil)
         detailWeatherVC.queryTxt = queryTxt
+        detailWeatherVC.lblCountryCode = countryCode
         self.navigationController?.pushViewController(detailWeatherVC, animated: true)
     }
 
