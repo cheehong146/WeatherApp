@@ -49,7 +49,6 @@ class CityDetailVC: UIViewController {
         self.lblCountryCode.text = countryCode ?? "123"
         
         fetchCityWeatherDetail(city: queryTxt!)
-        blurEffect(imageView: ivBackground)
     }
     
     fileprivate func fetchCityWeatherDetail(city: String){
@@ -80,6 +79,9 @@ class CityDetailVC: UIViewController {
         default:
             ivBackground.image = #imageLiteral(resourceName: "sunBg")
         }
+        //blur the bg image
+        blurEffect(imageView: ivBackground)
+        
         //top container lbl
         lblCity.text = city.name
         lblCountry.text = city.sys.country
