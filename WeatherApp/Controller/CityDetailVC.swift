@@ -16,7 +16,6 @@ class CityDetailVC: UIViewController {
     //top container lbl
     @IBOutlet weak var lblCity: UILabel!
     @IBOutlet weak var lblCountry: UILabel!
-    @IBOutlet weak var lblCountryCode: UILabel!
     @IBOutlet weak var lblTemperature: UILabel!
     @IBOutlet weak var lblDesc: UILabel!
     //middle container lbl
@@ -47,7 +46,7 @@ class CityDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         allLabel = [
-            lblCity, lblCountry, lblCountryCode,
+            lblCity, lblCountry,
             lblTemperature, lblDesc,
             lblSunrise, lblSunset,
             lblWindSpeedVal, lblWindDegreeVal,
@@ -56,8 +55,7 @@ class CityDetailVC: UIViewController {
         
         self.title = queryTxt!
         self.lblCity.text = country?.capital
-        self.lblCountry.text = country?.name
-        self.lblCountryCode.text = "(\(countryCode))"
+        self.lblCountry.text = "\(country?.name ?? "KL") (\(country?.code ?? "123"))"
         blurEffect(imageView: self.ivBackground)
         
         fetchCityWeatherDetail(city: queryTxt!)
@@ -91,7 +89,7 @@ class CityDetailVC: UIViewController {
         case "Rain",
              "Thunderstorm":
             ivBackground.image = #imageLiteral(resourceName: "rainyBg")
-        case "snow":
+        case "snow", "Snow":
             ivBackground.image = #imageLiteral(resourceName: "snowBg")
                 allLabel.forEach { (label) in
                     label.textColor = .black
@@ -99,13 +97,15 @@ class CityDetailVC: UIViewController {
         default:
             ivBackground.image = #imageLiteral(resourceName: "sunBg")
         }
+        
         //blur the bg image
         blurEffect(imageView: ivBackground)
         
         //top container lbl
 //        lblCity.text = city.name
 //        lblCountry.text = city.sys.country
-//        lblCountryCode.text = "(\(countryCode))"
+ 
+        //        lblCountryCode.text = "(\(countryCode))"
         lblTemperature.text = "\(Int(city.main.temp))°C"
         lblDesc.text = city.weather[0].weatherDescription
         //middle container lbl
