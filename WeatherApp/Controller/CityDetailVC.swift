@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import CoreImage
+import MBProgressHUD
 
 class CityDetailVC: UIViewController {
     @IBOutlet weak var ivBackground: UIImageView!
@@ -27,6 +28,8 @@ class CityDetailVC: UIViewController {
     @IBOutlet weak var lblWindHeader: UILabel!
     @IBOutlet weak var lblWindSpeed: UILabel!
     @IBOutlet weak var lblWindDegree: UILabel!
+    
+    var progressHUD: MBProgressHUD?
     
     //all label array
     var allLabel = [UILabel]()
@@ -52,12 +55,21 @@ class CityDetailVC: UIViewController {
         ]
         
         self.title = queryTxt!
-        self.lblCountryCode.text = countryCode
+        self.lblCity.text = country?.capital
+        self.lblCountry.text = country?.name
+        self.lblCountryCode.text = "(\(countryCode))"
+        blurEffect(imageView: self.ivBackground)
         
         fetchCityWeatherDetail(city: queryTxt!)
     }
     
     fileprivate func fetchCityWeatherDetail(city: String){
+        progressHUD? = MBProgressHUD(view: self.view)
+        progressHUD?.mode = .indeterminate
+        progressHUD?.isUserInteractionEnabled = false
+        progressHUD?.label.text = "Loading..."
+        progressHUD?.show(animated: true)
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         NetworkingController.sharedInstance.getWeatherDetail(capitalCity: city) { (city, error) in
             if let city = city {
                 self.city = city
@@ -67,6 +79,8 @@ class CityDetailVC: UIViewController {
             if let error = error{
                 print(error)
             }
+            
+            MBProgressHUD.hide(for: self.view, animated: true)
         }
     }
     
@@ -89,9 +103,9 @@ class CityDetailVC: UIViewController {
         blurEffect(imageView: ivBackground)
         
         //top container lbl
-        lblCity.text = city.name
-        lblCountry.text = city.sys.country
-        lblCountryCode.text = "(\(countryCode))"
+//        lblCity.text = city.name
+//        lblCountry.text = city.sys.country
+//        lblCountryCode.text = "(\(countryCode))"
         lblTemperature.text = "\(Int(city.main.temp))°C"
         lblDesc.text = city.weather[0].weatherDescription
         //middle container lbl
