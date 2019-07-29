@@ -11,17 +11,18 @@ import Foundation
 class Country {
     var name: String
     var capital: String
-
+    var code: String
     init?(json: [String: Any]) {
     guard
         let name: String = json["name"] as? String,
-        let capital: String = json["capital"] as? String
+        let capital: String = json["capital"] as? String,
+        let code: String = json["numericCode"] as? String
         else {
             print("Error while fetching countries data.")
             return nil
         }
-
         self.name = name
         self.capital = capital
+        self.code = code
     }
 }

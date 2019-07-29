@@ -137,7 +137,17 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         let selectedTxt = cell?.textLabel?.text
-        goToDetailWeatherVC(queryTxt: selectedTxt!, countryCode: "999")
+        var code = ""
+        if let selectedTxt = selectedTxt {
+            for country in countries {
+                if country.name ==  selectedTxt {
+                    code = country.code
+                } else if country.capital == selectedTxt {
+                    code = country.code
+                }
+            }
+        }
+        goToDetailWeatherVC(queryTxt: selectedTxt!, countryCode: code)
     }
     
     fileprivate func goToDetailWeatherVC(queryTxt: String, countryCode: String){
