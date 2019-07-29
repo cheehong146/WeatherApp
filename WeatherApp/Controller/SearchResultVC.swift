@@ -21,8 +21,8 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
 
     var searchText: String = ""
     var countries: [Country] = []
-    var foundCountries: [String] = []
-    var foundCities: [String] = []
+    var foundCountries: [Country] = []
+    var foundCities: [Country] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,10 +62,10 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
         self.foundCities = []
         for country in countries {
             if country.name.contains(searchText) {
-                self.foundCountries.append(country.name)
+                self.foundCountries.append(country)
             }
             if country.capital.contains(searchText) {
-                self.foundCities.append(country.capital)
+                self.foundCities.append(country)
             }
         }
         tableView.reloadData()
@@ -75,12 +75,12 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
         switch indexPath.section {
         case ResultType.country.rawValue:
             let cell: UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "CountryTableViewCell")
-            cell.textLabel?.text = foundCountries[indexPath.row]
+            cell.textLabel?.text = foundCountries[indexPath.row].name
             cell.backgroundColor = .clear
             return cell
         case ResultType.city.rawValue:
             let cell: UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "CapitalTableViewCell")
-            cell.textLabel?.text = foundCities[indexPath.row]
+            cell.textLabel?.text = foundCities[indexPath.row].capital
             cell.backgroundColor = .clear
             return cell
         case ResultType.noResult.rawValue:
@@ -137,6 +137,14 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         let selectedTxt = cell?.textLabel?.text
+        var country: Country?
+        switch indexPath.section {
+        case ResultType.country.rawValue:
+            country = foundCountries[indexPath.row]
+        case ResultType.city.rawValue:
+            country = foundCities[indexPath.row]
+        default: return
+        }
         var code = ""
         if let selectedTxt = selectedTxt {
             for country in countries {
@@ -147,13 +155,15 @@ class SearchResultVC: UIViewController, UISearchBarDelegate, UITableViewDelegate
                 }
             }
         }
-        goToDetailWeatherVC(queryTxt: selectedTxt!, countryCode: code)
+        if let country = country {
+            goToDetailWeatherVC(queryTxt: selectedTxt!, country: country)
+        }
     }
     
-    fileprivate func goToDetailWeatherVC(queryTxt: String, countryCode: String){
+    fileprivate func goToDetailWeatherVC(queryTxt: String, country: Country){
         let detailWeatherVC = CityDetailVC(nibName: "CityDetailVC", bundle: nil)
         detailWeatherVC.queryTxt = queryTxt
-        detailWeatherVC.countryCode = countryCode
+        detailWeatherVC.country = country
         self.navigationController?.pushViewController(detailWeatherVC, animated: true)
     }
 

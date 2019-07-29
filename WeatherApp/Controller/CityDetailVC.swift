@@ -32,8 +32,14 @@ class CityDetailVC: UIViewController {
     var allLabel = [UILabel]()
     
     var queryTxt: String?
-    var countryCode: String?
+    var countryCode: String {
+        if let country = country {
+            return country.code
+        }
+        return "123"
+    }
     var city: City?
+    var country: Country?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +52,7 @@ class CityDetailVC: UIViewController {
         ]
         
         self.title = queryTxt!
-        self.lblCountryCode.text = countryCode ?? "123"
+        self.lblCountryCode.text = countryCode
         
         fetchCityWeatherDetail(city: queryTxt!)
     }
@@ -85,7 +91,7 @@ class CityDetailVC: UIViewController {
         //top container lbl
         lblCity.text = city.name
         lblCountry.text = city.sys.country
-        lblCountryCode.text = "(\(123))"
+        lblCountryCode.text = "(\(countryCode))"
         lblTemperature.text = "\(Int(city.main.temp))°C"
         lblDesc.text = city.weather[0].weatherDescription
         //middle container lbl
